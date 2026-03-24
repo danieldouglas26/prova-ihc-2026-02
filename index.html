@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A.R.I.S. - Sistema de Inteligência Adaptativa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cyan: #00f3ff;
+            --cyan-glow: rgba(0, 243, 255, 0.4);
+            --blue-dark: rgba(4, 15, 30, 0.85);
+            --red: #ff003c;
+            --red-glow: rgba(255, 0, 60, 0.5);
+            --white: #e0fbfc;
+            --font-main: 'Rajdhani', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: radial-gradient(circle at center, #0a192f 0%, #020c1b 100%);
+            color: var(--cyan);
+            font-family: var(--font-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* --- CONTROLES DE DEMONSTRAÇÃO --- */
+        .controls {
+            position: absolute;
+            top: 20px;
+            z-index: 100;
+            display: flex;
+            gap: 15px;
+        }
+
+        .controls button {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--cyan);
+            color: var(--cyan);
+            padding: 8px 20px;
+            font-family: var(--font-main);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            transition: all 0.3s ease;
+        }
+
+        .controls button:hover {
+            background: var(--cyan);
+            color: #000;
+            box-shadow: 0 0 15px var(--cyan-glow);
+        }
+
+        /* --- CONTAINER PRINCIPAL HUD --- */
+        .hud-wrapper {
+            position: relative;
+            width: 1000px;
+            height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Cantoneiras decorativas do HUD */
+        .corner {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border: 2px solid var(--cyan);
+            transition: border-color 0.3s;
+        }
+        .top-left { top: 0; left: 0; border-right: none; border-bottom: none; }
+        .top-right { top: 0; right: 0; border-left: none; border-bottom: none; }
+        .bottom-left { bottom: 0; left: 0; border-right: none; border-top: none; }
+        .bottom-right { bottom: 0; right: 0; border-left: none; border-top: none; }
+
+        .hud-screen {
+            width: 95%;
+            height: 95%;
+            background: var(--blue-dark);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.1) inset;
+            padding: 30px;
+            box-sizing: border-box;
+            display: none;
+            flex-direction: column;
+            clip-path: polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px);
+        }
+
+        .hud-screen.active {
+            display: flex;
+            animation: bootUp 0.5s ease-out forwards;
+        }
+
+        @keyframes bootUp {
+            0% { opacity: 0; transform: scale(0.95); filter: brightness(2); }
+            100% { opacity: 1; transform: scale(1); filter: brightness(1); }
+        }
+
+        /* --- COMPONENTES GERAIS --- */
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 2px solid rgba(0, 243, 255, 0.5);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-shadow: 0 0 8px var(--cyan-glow);
+        }
+
+        /* Anéis Giratórios de Fundo */
+        .rotating-rings {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            height: 400px;
+            pointer-events: none;
+            opacity: 0.15;
+            z-index: 0;
+        }
+        .ring {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 50%;
+            border: 2px solid transparent;
+        }
+        .ring:nth-child(1) { border-top: 2px solid var(--cyan); border-bottom: 2px solid var(--cyan); animation: spin 8s linear infinite; }
+        .ring:nth-child(2) { width: 80%; height: 80%; margin: 10%; border-left: 2px dashed var(--cyan); border-right: 2px dashed var(--cyan); animation: spin-reverse 12s linear infinite; }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes spin-reverse { 100% { transform: rotate(-360deg); } }
+
+        .content { z-index: 1; position: relative; flex-grow: 1; }
+
+        /* --- TELA 1: ROTINA --- */
+        .greeting-glitch { font-size: 2.5rem; text-align: center; margin-top: 20px; letter-spacing: 5px; color: var(--white); text-shadow: 0 0 10px rgba(255,255,255,0.5); }
+        
+        .panel-box {
+            background: rgba(0, 243, 255, 0.05);
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            padding: 20px;
+            margin: 30px auto;
+            width: 70%;
+            clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+        }
+        
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(0, 243, 255, 0.1);
+            font-size: 1.2rem;
+            text-transform: uppercase;
+        }
+
+        .bar-container { width: 200px; height: 10px; background: rgba(0,255,255,0.1); border: 1px solid var(--cyan); }
+        .bar-fill { height: 100%; width: 40%; background: var(--cyan); box-shadow: 0 0 10px var(--cyan); }
+
+        .btn-hollow {
+            background: transparent;
+            border: 1px solid var(--cyan);
+            color: var(--cyan);
+            padding: 5px 15px;
+            font-family: var(--font-main);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-hollow:hover { background: var(--cyan); color: #000; }
+
+        /* --- TELA 2: OPERAÇÃO --- */
+        #screen-operation { --cyan: #4facfe; --cyan-glow: rgba(79, 172, 254, 0.5); color: var(--cyan); }
+        .grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 20px; }
+        
+        .tech-list h3 { border-bottom: 1px solid var(--cyan); padding-bottom: 5px; margin-bottom: 15px; font-weight: 600; letter-spacing: 2px; }
+        .tech-list p { margin: 10px 0; font-size: 1.1rem; display: flex; justify-content: space-between; }
+        .status-ok { color: #00ff88; text-shadow: 0 0 5px #00ff88; }
+        
+        .target-box {
+            border: 1px solid var(--cyan);
+            background: rgba(79, 172, 254, 0.1);
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .target-box::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: scan 3s infinite;
+        }
+        @keyframes scan { 100% { left: 200%; } }
+
+        /* --- TELA 3: CRISE (O Vermelho "Lockdown") --- */
+        #screen-crisis { 
+            --cyan: #ff003c; 
+            --cyan-glow: rgba(255, 0, 60, 0.6); 
+            color: var(--cyan); 
+            background: rgba(30, 0, 0, 0.85);
+            animation: pulse-danger 2s infinite alternate;
+        }
+        @keyframes pulse-danger {
+            0% { box-shadow: 0 0 20px rgba(255, 0, 60, 0.2) inset; }
+            100% { box-shadow: 0 0 50px rgba(255, 0, 60, 0.5) inset; }
+        }
+
+        .alert-banner {
+            background: rgba(255, 0, 60, 0.2);
+            border-left: 5px solid var(--red);
+            border-right: 5px solid var(--red);
+            padding: 15px;
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+            margin-bottom: 30px;
+            animation: flash-text 1s infinite;
+        }
+        @keyframes flash-text { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        .btn-massive {
+            display: block;
+            width: 80%;
+            margin: 15px auto;
+            padding: 20px;
+            background: rgba(255, 0, 60, 0.1);
+            border: 2px solid var(--red);
+            color: var(--white);
+            font-family: var(--font-main);
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            cursor: pointer;
+            text-align: center;
+            clip-path: polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px);
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-massive:hover {
+            background: var(--red);
+            color: #000;
+            box-shadow: 0 0 30px var(--red-glow);
+            transform: scale(1.02);
+        }
+        .btn-massive span { display: block; font-size: 1rem; font-weight: 500; opacity: 0.8; margin-top: 5px; }
+
+        /* Dados aleatórios simulados */
+        .random-data { position: absolute; bottom: 30px; right: 30px; font-size: 0.9rem; opacity: 0.6; text-align: right; }
+        
+    </style>
+</head>
+<body>
+
+    <div class="controls">
+        <button onclick="changeScreen('routine')" style="border-color: #00f3ff; color: #00f3ff;">1. Rotina</button>
+        <button onclick="changeScreen('operation')" style="border-color: #4facfe; color: #4facfe;">2. Operação</button>
+        <button onclick="changeScreen('crisis')" style="border-color: #ff003c; color: #ff003c;">3. Crise</button>
+    </div>
+
+    <div class="hud-wrapper" id="main-hud">
+        
+        <div class="corner top-left"></div>
+        <div class="corner top-right"></div>
+        <div class="corner bottom-left"></div>
+        <div class="corner bottom-right"></div>
+
+        <div class="rotating-rings">
+            <div class="ring"></div>
+            <div class="ring"></div>
+        </div>
+
+        <div id="screen-routine" class="hud-screen active">
+            <div class="header-bar">
+                <span>SYS // A.R.I.S. // RESIDENCIAL</span>
+                <span class="live-clock">[ 00:00:00 ]</span>
+            </div>
+            
+            <div class="content">
+                <div class="greeting-glitch">BEM-VINDO, SR. STARK</div>
+
+                <div class="panel-box">
+                    <div style="text-align: center; margin-bottom: 20px; font-weight: 700; letter-spacing: 2px;">[ CONTROLES DE AMBIENTE ]</div>
+                    
+                    <div class="data-row">
+                        <span>Luminosidade</span>
+                        <div class="bar-container"><div class="bar-fill"></div></div>
+                        <span>40% [WARM]</span>
+                    </div>
+                    <div class="data-row">
+                        <span>Temperatura Atmosférica</span>
+                        <div>
+                            <button class="btn-hollow">-</button>
+                            <span style="margin: 0 20px; font-weight: 700; font-size: 1.5rem;">21.5°C</span>
+                            <button class="btn-hollow">+</button>
+                        </div>
+                    </div>
+                    <div class="data-row" style="border: none;">
+                        <span>Mídia Ativa</span>
+                        <span style="color: var(--white);">[ AC/DC - Back in Black ]</span>
+                        <button class="btn-hollow">||</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="random-data">
+                MEM: <span id="mem-usage">45</span>%<br>
+                UPLINK: SECURE
+            </div>
+        </div>
+
+        <div id="screen-operation" class="hud-screen">
+            <div class="header-bar">
+                <span>SYS // A.R.I.S. // LABORATÓRIO N-4</span>
+                <span class="live-clock">[ 00:00:00 ]</span>
+            </div>
+
+            <div class="content">
+                <div class="grid-2col">
+                    <div class="tech-list panel-box" style="margin:0; width: auto;">
+                        <h3>DIAGNÓSTICO DE ARMADURAS</h3>
+                        <p><span>MARK 85</span> <span class="status-ok">[ INTEGRAL 98% ]</span></p>
+                        <p><span>MARK 50</span> <span>[ MANUTENÇÃO ]</span></p>
+                        <p><span>HULKBUSTER</span> <span>[ STANDBY ]</span></p>
+                    </div>
+                    <div class="tech-list panel-box" style="margin:0; width: auto;">
+                        <h3>SEGURANÇA PERIMETRAL</h3>
+                        <p><span>PORTÕES DE ACESSO</span> <span class="status-ok">[ SELADOS ]</span></p>
+                        <p><span>CÂMERAS ATIVAS</span> <span>[ 42 / 42 ]</span></p>
+                    </div>
+                </div>
+
+                <div class="target-box">
+                    <h2 style="margin-top: 0; color: var(--white); text-shadow: 0 0 10px rgba(255,255,255,0.8);">ALERTA DE CONFLITO DE ACESSO</h2>
+                    <p style="font-size: 1.5rem; margin: 10px 0;">[ IDENTIDADE DETECTADA: HAPPY HOGAN ]</p>
+                    <p style="margin-bottom: 20px;">Nível de Confiança Biométrica: 99.8%</p>
+                    
+                    <button class="btn-hollow" style="font-size: 1.2rem; padding: 10px 30px; margin-right: 20px;">PERMITIR ENTRADA</button>
+                    <button class="btn-hollow" style="font-size: 1.2rem; padding: 10px 30px; border-color: #ff003c; color: #ff003c;">MANTER BLOQUEIO</button>
+                </div>
+            </div>
+            
+            <div class="random-data" style="color: #4facfe;">
+                NET: <span id="net-ping">12</span>ms<br>
+                FIREWALL: ACTIVE
+            </div>
+        </div>
+
+        <div id="screen-crisis" class="hud-screen">
+            <div class="header-bar">
+                <span>SYS // A.R.I.S. // DIRETRIZ CRÍTICA</span>
+                <span>[ PRIORIDADE 0 ]</span>
+            </div>
+
+            <div class="content">
+                <div class="alert-banner">
+                    ⚠ AMEAÇA DETECTADA: PERÍMETRO LESTE ROMPIDO ⚠
+                </div>
+
+                <div style="text-align: center; margin-bottom: 30px; font-size: 1.5rem; color: var(--white);">
+                    > AÇÃO SUGERIDA: VESTIR ARMADURA IMEDIATAMENTE <
+                </div>
+
+                <button class="btn-massive">
+                    [ INICIAR LOCKDOWN TOTAL ]
+                    <span>Sela todas as saídas e ativa defesas letais</span>
+                </button>
+                
+                <div class="grid-2col" style="width: 80%; margin: 0 auto;">
+                    <button class="btn-massive" style="width: 100%; font-size: 1.2rem;">
+                        [ CÂMERAS DO SETOR ]
+                    </button>
+                    <button class="btn-massive" style="width: 100%; font-size: 1.2rem; background: transparent; border-color: rgba(255,0,60,0.5);">
+                        [ IGNORAR ALERTA ]
+                        <span>*Exige Autenticação*</span>
+                    </button>
+                </div>
+            </div>
+
+            <div style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); text-align: center; opacity: 0.8; font-style: italic;">
+                -- Feedback Háptico na Armadura Ativado --
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Função para alternar telas e cores do HUD principal
+        function changeScreen(screenId) {
+            document.querySelectorAll('.hud-screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById('screen-' + screenId).classList.add('active');
+
+            const corners = document.querySelectorAll('.corner');
+            let color = '#00f3ff'; // Rotina
+            if(screenId === 'operation') color = '#4facfe';
+            if(screenId === 'crisis') color = '#ff003c';
+
+            corners.forEach(corner => corner.style.borderColor = color);
+        }
+
+        // Relógio e Dados simulados para dar vida à UI
+        setInterval(() => {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('pt-BR');
+            document.querySelectorAll('.live-clock').forEach(clock => {
+                clock.innerText = `[ ${timeString} ]`;
+            });
+
+            // Randomiza os números de memória e rede
+            document.getElementById('mem-usage').innerText = Math.floor(Math.random() * (60 - 40 + 1) + 40);
+            document.getElementById('net-ping').innerText = Math.floor(Math.random() * (25 - 8 + 1) + 8);
+        }, 1000);
+    </script>
+</body>
+</html>
