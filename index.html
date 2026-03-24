@@ -70,7 +70,6 @@
             justify-content: center;
         }
 
-        /* Cantoneiras decorativas do HUD */
         .corner {
             position: absolute;
             width: 50px;
@@ -107,7 +106,6 @@
             100% { opacity: 1; transform: scale(1); filter: brightness(1); }
         }
 
-        /* --- COMPONENTES GERAIS --- */
         .header-bar {
             display: flex;
             justify-content: space-between;
@@ -121,7 +119,6 @@
             text-shadow: 0 0 8px var(--cyan-glow);
         }
 
-        /* Anéis Giratórios de Fundo */
         .rotating-rings {
             position: absolute;
             top: 50%;
@@ -147,131 +144,140 @@
 
         .content { z-index: 1; position: relative; flex-grow: 1; }
 
-        /* --- TELA 1: ROTINA --- */
+        /* --- TELA 1 --- */
         .greeting-glitch { font-size: 2.5rem; text-align: center; margin-top: 20px; letter-spacing: 5px; color: var(--white); text-shadow: 0 0 10px rgba(255,255,255,0.5); }
-        
-        .panel-box {
-            background: rgba(0, 243, 255, 0.05);
-            border: 1px solid rgba(0, 243, 255, 0.3);
-            padding: 20px;
-            margin: 30px auto;
-            width: 70%;
-            clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
-        }
-        
-        .data-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 0;
-            border-bottom: 1px solid rgba(0, 243, 255, 0.1);
-            font-size: 1.2rem;
-            text-transform: uppercase;
-        }
-
+        .panel-box { background: rgba(0, 243, 255, 0.05); border: 1px solid rgba(0, 243, 255, 0.3); padding: 20px; margin: 30px auto; width: 70%; clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px); }
+        .data-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid rgba(0, 243, 255, 0.1); font-size: 1.2rem; text-transform: uppercase; }
         .bar-container { width: 200px; height: 10px; background: rgba(0,255,255,0.1); border: 1px solid var(--cyan); }
         .bar-fill { height: 100%; width: 40%; background: var(--cyan); box-shadow: 0 0 10px var(--cyan); }
-
-        .btn-hollow {
-            background: transparent;
-            border: 1px solid var(--cyan);
-            color: var(--cyan);
-            padding: 5px 15px;
-            font-family: var(--font-main);
-            cursor: pointer;
-            transition: 0.2s;
-        }
+        .btn-hollow { background: transparent; border: 1px solid var(--cyan); color: var(--cyan); padding: 5px 15px; font-family: var(--font-main); cursor: pointer; transition: 0.2s; }
         .btn-hollow:hover { background: var(--cyan); color: #000; }
 
-        /* --- TELA 2: OPERAÇÃO --- */
+        /* --- TELA 2 --- */
         #screen-operation { --cyan: #4facfe; --cyan-glow: rgba(79, 172, 254, 0.5); color: var(--cyan); }
         .grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 20px; }
-        
         .tech-list h3 { border-bottom: 1px solid var(--cyan); padding-bottom: 5px; margin-bottom: 15px; font-weight: 600; letter-spacing: 2px; }
         .tech-list p { margin: 10px 0; font-size: 1.1rem; display: flex; justify-content: space-between; }
         .status-ok { color: #00ff88; text-shadow: 0 0 5px #00ff88; }
-        
-        .target-box {
-            border: 1px solid var(--cyan);
-            background: rgba(79, 172, 254, 0.1);
-            padding: 20px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        .target-box::before {
-            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            animation: scan 3s infinite;
-        }
-        @keyframes scan { 100% { left: 200%; } }
+        .target-box { border: 1px solid var(--cyan); background: rgba(79, 172, 254, 0.1); padding: 20px; text-align: center; position: relative; overflow: hidden; }
 
-        /* --- TELA 3: CRISE (O Vermelho "Lockdown") --- */
-        #screen-crisis { 
-            --cyan: #ff003c; 
-            --cyan-glow: rgba(255, 0, 60, 0.6); 
-            color: var(--cyan); 
-            background: rgba(30, 0, 0, 0.85);
-            animation: pulse-danger 2s infinite alternate;
-        }
-        @keyframes pulse-danger {
-            0% { box-shadow: 0 0 20px rgba(255, 0, 60, 0.2) inset; }
-            100% { box-shadow: 0 0 50px rgba(255, 0, 60, 0.5) inset; }
-        }
-
-        .alert-banner {
-            background: rgba(255, 0, 60, 0.2);
-            border-left: 5px solid var(--red);
-            border-right: 5px solid var(--red);
-            padding: 15px;
-            text-align: center;
-            font-size: 1.8rem;
-            font-weight: 700;
-            letter-spacing: 4px;
-            margin-bottom: 30px;
-            animation: flash-text 1s infinite;
-        }
+        /* --- TELA 3 --- */
+        #screen-crisis { --cyan: #ff003c; --cyan-glow: rgba(255, 0, 60, 0.6); color: var(--cyan); background: rgba(30, 0, 0, 0.85); animation: pulse-danger 2s infinite alternate; }
+        @keyframes pulse-danger { 0% { box-shadow: 0 0 20px rgba(255, 0, 60, 0.2) inset; } 100% { box-shadow: 0 0 50px rgba(255, 0, 60, 0.5) inset; } }
+        .alert-banner { background: rgba(255, 0, 60, 0.2); border-left: 5px solid var(--red); border-right: 5px solid var(--red); padding: 15px; text-align: center; font-size: 1.8rem; font-weight: 700; letter-spacing: 4px; margin-bottom: 30px; animation: flash-text 1s infinite; }
         @keyframes flash-text { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-
-        .btn-massive {
-            display: block;
-            width: 80%;
-            margin: 15px auto;
-            padding: 20px;
-            background: rgba(255, 0, 60, 0.1);
-            border: 2px solid var(--red);
-            color: var(--white);
-            font-family: var(--font-main);
-            font-size: 1.5rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            cursor: pointer;
-            text-align: center;
-            clip-path: polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px);
-            transition: 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-        .btn-massive:hover {
-            background: var(--red);
-            color: #000;
-            box-shadow: 0 0 30px var(--red-glow);
-            transform: scale(1.02);
-        }
-        .btn-massive span { display: block; font-size: 1rem; font-weight: 500; opacity: 0.8; margin-top: 5px; }
-
-        /* Dados aleatórios simulados */
+        .btn-massive { display: block; width: 80%; margin: 15px auto; padding: 20px; background: rgba(255, 0, 60, 0.1); border: 2px solid var(--red); color: var(--white); font-family: var(--font-main); font-size: 1.5rem; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; cursor: pointer; text-align: center; clip-path: polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px); transition: 0.3s; }
+        .btn-massive:hover { background: var(--red); color: #000; box-shadow: 0 0 30px var(--red-glow); transform: scale(1.02); }
         .random-data { position: absolute; bottom: 30px; right: 30px; font-size: 0.9rem; opacity: 0.6; text-align: right; }
+
+        /* --- CÂMERA E VOZ --- */
+        #camera-popup {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            width: 250px;
+            height: 180px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid var(--cyan);
+            display: none;
+            flex-direction: column;
+            z-index: 1000;
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%);
+            box-shadow: 0 0 20px var(--cyan-glow);
+        }
+        #camera-popup header { background: var(--cyan); color: #000; font-size: 0.8rem; font-weight: bold; padding: 2px 10px; text-transform: uppercase; }
+        #camera-view { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
         
+        #voice-indicator {
+            position: absolute;
+            top: 25px;
+            right: 250px;
+            font-size: 0.9rem;
+            color: var(--cyan);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0.2; /* Fica opaco quando desligado */
+            transition: opacity 0.3s;
+        }
+        .pulse-dot { width: 8px; height: 8px; background: var(--cyan); border-radius: 50%; animation: pulse 1s infinite; display: none; }
+        @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(2); opacity: 0; } }
+
+        /* Botão Discreto de Ativação do Mic */
+        #mic-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: transparent;
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            color: rgba(0, 243, 255, 0.5);
+            padding: 5px 10px;
+            font-family: var(--font-main);
+            font-size: 0.8rem;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+        #mic-btn:hover, #mic-btn.active {
+            border-color: var(--cyan);
+            color: var(--cyan);
+            box-shadow: 0 0 10px var(--cyan-glow);
+        }
+
+
+        /* Terminal de Transcrição de Voz */
+        #transcript-box {
+            position: absolute;
+            bottom: 80px; /* Fica logo acima da borda inferior */
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(4, 15, 30, 0.9);
+            border: 1px solid var(--cyan);
+            border-left: 5px solid var(--cyan);
+            color: var(--white);
+            padding: 10px 25px;
+            font-family: var(--font-main);
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            z-index: 2000;
+            opacity: 0; /* Escondido por padrão */
+            transition: opacity 0.3s;
+            pointer-events: none;
+            box-shadow: 0 0 15px var(--cyan-glow);
+        }
+        
+        #transcript-box span {
+            color: var(--cyan);
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
     </style>
 </head>
 <body>
-
+    
     <div class="controls">
         <button onclick="changeScreen('routine')" style="border-color: #00f3ff; color: #00f3ff;">1. Rotina</button>
         <button onclick="changeScreen('operation')" style="border-color: #4facfe; color: #4facfe;">2. Operação</button>
         <button onclick="changeScreen('crisis')" style="border-color: #ff003c; color: #ff003c;">3. Crise</button>
+    </div>
+
+    <div id="voice-indicator">
+        <div class="pulse-dot" id="dot"></div>
+        <span id="voice-status">A.R.I.S. Offline</span>
+    </div>
+
+    <button id="mic-btn">🎙️ Ativar Voz</button>
+
+    <div id="transcript-box">
+        <span>[ INPUT ]></span> <span id="transcript-text" style="color: white; font-weight: normal;">...</span>
+    </div>
+
+    <div id="camera-popup">
+        <header>Live Feed: Lab Entrance</header>
+        <video id="camera-view" autoplay playsinline></video>
     </div>
 
     <div class="hud-wrapper" id="main-hud">
@@ -337,7 +343,6 @@
                         <h3>DIAGNÓSTICO DE ARMADURAS</h3>
                         <p><span>MARK 85</span> <span class="status-ok">[ INTEGRAL 98% ]</span></p>
                         <p><span>MARK 50</span> <span>[ MANUTENÇÃO ]</span></p>
-                        <p><span>HULKBUSTER</span> <span>[ STANDBY ]</span></p>
                     </div>
                     <div class="tech-list panel-box" style="margin:0; width: auto;">
                         <h3>SEGURANÇA PERIMETRAL</h3>
@@ -397,37 +402,180 @@
                 -- Feedback Háptico na Armadura Ativado --
             </div>
         </div>
-
     </div>
 
     <script>
-        // Função para alternar telas e cores do HUD principal
+        // --- CÂMERA LOGIC ---
+        const cameraPopup = document.getElementById('camera-popup');
+        const video = document.getElementById('camera-view');
+
+        async function startCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = stream;
+                cameraPopup.style.display = 'flex';
+            } catch (err) {
+                console.error("Erro ao acessar câmera: ", err);
+            }
+        }
+
+        function stopCamera() {
+            if (video.srcObject) {
+                video.srcObject.getTracks().forEach(track => track.stop());
+                cameraPopup.style.display = 'none';
+            }
+        }
+
+        // --- FUNÇÃO UNIFICADA DE TROCA DE TELA ---
         function changeScreen(screenId) {
+            // 1. Esconde as telas antigas
             document.querySelectorAll('.hud-screen').forEach(screen => {
                 screen.classList.remove('active');
             });
+            
+            // 2. Mostra a nova tela
             document.getElementById('screen-' + screenId).classList.add('active');
 
+            // 3. Muda as cores das bordas (corners)
             const corners = document.querySelectorAll('.corner');
             let color = '#00f3ff'; // Rotina
             if(screenId === 'operation') color = '#4facfe';
             if(screenId === 'crisis') color = '#ff003c';
-
             corners.forEach(corner => corner.style.borderColor = color);
+
+            // 4. Ativa ou desativa a câmera
+            if (screenId === 'operation') {
+                startCamera();
+            } else {
+                stopCamera();
+            }
         }
 
-        // Relógio e Dados simulados para dar vida à UI
+        // --- RELÓGIO E DADOS FALSOS ---
         setInterval(() => {
             const now = new Date();
             const timeString = now.toLocaleTimeString('pt-BR');
-            document.querySelectorAll('.live-clock').forEach(clock => {
-                clock.innerText = `[ ${timeString} ]`;
-            });
-
-            // Randomiza os números de memória e rede
+            document.querySelectorAll('.live-clock').forEach(clock => clock.innerText = `[ ${timeString} ]`);
             document.getElementById('mem-usage').innerText = Math.floor(Math.random() * (60 - 40 + 1) + 40);
             document.getElementById('net-ping').innerText = Math.floor(Math.random() * (25 - 8 + 1) + 8);
         }, 1000);
+
+       // --- CONFIGURAÇÃO DE VOZ (Com janela de atenção e legendas) ---
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const synth = window.speechSynthesis;
+        let isListening = false;
+        let recognition;
+        
+        // Variáveis da Janela de Atenção
+        let arisAwake = false;
+        let awakeTimeout;
+
+        const micBtn = document.getElementById('mic-btn');
+        const indicator = document.getElementById('voice-indicator');
+        const dot = document.getElementById('dot');
+        const statusText = document.getElementById('voice-status');
+        const transcriptBox = document.getElementById('transcript-box');
+        const transcriptText = document.getElementById('transcript-text');
+
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = false;
+            recognition.lang = 'pt-BR';
+
+            const speak = (text) => {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 1.1;
+                utterance.pitch = 0.9;
+                synth.speak(utterance);
+            };
+
+            // Função para resetar o estado "acordado" da inteligência
+            const resetAwakeState = () => {
+                arisAwake = false;
+                clearTimeout(awakeTimeout);
+                statusText.innerText = "A.R.I.S. Listening_";
+                statusText.style.color = "var(--cyan)";
+            };
+
+            recognition.onresult = (event) => {
+                const command = event.results[event.results.length - 1][0].transcript.toLowerCase();
+                console.log("Comando capturado:", command);
+                
+                // Exibir o texto na tela (HUD)
+                transcriptText.innerText = command;
+                transcriptBox.style.opacity = 1;
+                
+                // Apagar a legenda depois de 4 segundos
+                setTimeout(() => {
+                    if(transcriptText.innerText === command) transcriptBox.style.opacity = 0;
+                }, 4000);
+
+                // 1. Verifica se chamou a Wake Word
+                if (command.includes("aris") || command.includes("áris") || command.includes("alice")) { 
+                    arisAwake = true;
+                    statusText.innerText = "A.R.I.S. ONLINE E AGUARDANDO...";
+                    statusText.style.color = "#00ff88"; // Fica verde para indicar atenção
+                    
+                    // Fica atenta por 8 segundos
+                    clearTimeout(awakeTimeout);
+                    awakeTimeout = setTimeout(() => {
+                        resetAwakeState();
+                    }, 8000); 
+                }
+
+                // 2. Executa comandos SE estiver acordada OU se falou tudo na mesma frase
+                const isTriggered = arisAwake || command.includes("aris") || command.includes("alice");
+
+                if (isTriggered) {
+                    if (command.includes("rotina") || command.includes("casa") || command.includes("residencial")) {
+                        speak("Ativando modo residencial, senhor.");
+                        changeScreen('routine');
+                        resetAwakeState();
+                    } 
+                    else if (command.includes("operação") || command.includes("laboratório") || command.includes("lab")) {
+                        speak("Sistemas de diagnóstico online. Câmeras ativadas.");
+                        changeScreen('operation');
+                        resetAwakeState();
+                    } 
+                    else if (command.includes("crise") || command.includes("alerta") || command.includes("lockdown")) {
+                        speak("Protocolo de crise ativado! Lockdown iniciado.");
+                        changeScreen('crisis');
+                        resetAwakeState();
+                    }
+                }
+            };
+
+            recognition.onend = () => {
+                if (isListening) recognition.start();
+            };
+
+            micBtn.addEventListener('click', () => {
+                if (!isListening) {
+                    recognition.start();
+                    isListening = true;
+                    micBtn.classList.add('active');
+                    micBtn.innerText = "🎙️ Escutando...";
+                    indicator.style.opacity = 1;
+                    dot.style.display = 'block';
+                    statusText.innerText = "A.R.I.S. Listening_";
+                    speak("Sistemas de voz online.");
+                } else {
+                    recognition.stop();
+                    isListening = false;
+                    micBtn.classList.remove('active');
+                    micBtn.innerText = "🎙️ Ativar Voz";
+                    indicator.style.opacity = 0.2;
+                    dot.style.display = 'none';
+                    statusText.innerText = "A.R.I.S. Offline";
+                    resetAwakeState();
+                }
+            });
+        } else {
+            micBtn.innerText = "Voz Não Suportada";
+            micBtn.disabled = true;
+        }
+
     </script>
 </body>
 </html>
