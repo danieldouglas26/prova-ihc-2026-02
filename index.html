@@ -498,7 +498,7 @@
                 statusText.style.color = "var(--cyan)";
             };
 
-          recognition.onresult = (event) => {
+            recognition.onresult = (event) => {
                 const command = event.results[event.results.length - 1][0].transcript.toLowerCase();
                 console.log("Comando capturado:", command);
                 
@@ -511,32 +511,38 @@
                     if(transcriptText.innerText === command) transcriptBox.style.opacity = 0;
                 }, 4000);
 
-                // --- LÓGICA DE COMANDO DIRETO (Sem necessidade obrigatória da Wake Word) ---
-                
-                if (command.includes("rotina") || command.includes("casa") || command.includes("residencial")) {
-                    speak("Ativando modo residencial, senhor.");
-                    changeScreen('routine');
-                } 
-                else if (command.includes("operação") || command.includes("laboratório") || command.includes("lab")) {
-                    speak("Sistemas de diagnóstico online. Câmeras ativadas.");
-                    changeScreen('operation');
-                } 
-                else if (command.includes("crise") || command.includes("alerta") || command.includes("lockdown")) {
-                    speak("Protocolo de crise ativado! Lockdown iniciado.");
-                    changeScreen('crisis');
-                }
-                
-                // --- FEEDBACK VISUAL EXTRA SE DISSER O NOME ---
-                // Isso mantém o charme de interagir com a IA
-                else if (command.includes("aris") || command.includes("áris") || command.includes("alice")) { 
+                // 1. Verifica se chamou a Wake Word
+                if (command.includes("aris") || command.includes("áris") || command.includes("alice")) { 
+                    arisAwake = true;
                     statusText.innerText = "A.R.I.S. ONLINE E AGUARDANDO...";
-                    statusText.style.color = "#00ff88"; // Fica verde
+                    statusText.style.color = "#00ff88"; // Fica verde para indicar atenção
                     
-                    // Volta ao normal após 3 segundos
-                    setTimeout(() => {
-                        statusText.innerText = "A.R.I.S. Listening_";
-                        statusText.style.color = "var(--cyan)";
-                    }, 3000); 
+                    // Fica atenta por 8 segundos
+                    clearTimeout(awakeTimeout);
+                    awakeTimeout = setTimeout(() => {
+                        resetAwakeState();
+                    }, 8000); 
+                }
+
+                // 2. Executa comandos SE estiver acordada OU se falou tudo na mesma frase
+                const isTriggered = arisAwake || command.includes("aris") || command.includes("alice");
+
+                if (isTriggered) {
+                    if (command.includes("rotina") || command.includes("casa") || command.includes("residencial")) {
+                        speak("Ativando modo residencial, senhor.");
+                        changeScreen('routine');
+                        resetAwakeState();
+                    } 
+                    else if (command.includes("operação") || command.includes("laboratório") || command.includes("lab")) {
+                        speak("Sistemas de diagnóstico online. Câmeras ativadas.");
+                        changeScreen('operation');
+                        resetAwakeState();
+                    } 
+                    else if (command.includes("crise") || command.includes("alerta") || command.includes("lockdown")) {
+                        speak("Protocolo de crise ativado! Lockdown iniciado.");
+                        changeScreen('crisis');
+                        resetAwakeState();
+                    }
                 }
             };
 
